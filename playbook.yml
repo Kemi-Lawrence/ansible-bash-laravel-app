@@ -1,0 +1,19 @@
+
+- name: Run Bash script with arguments on slave
+  hosts: slave
+  tasks:
+    - name: Transfer Bash script to slave
+      copy:
+        src: lampdeploy.sh
+        dest: /tmp/lampdeploy.sh
+        mode: "0755"  # Ensure the script is executable
+
+    - name: Execute Bash script with arguments on slave
+      shell: /tmp/lampdeploy.sh https://github.com/laravel/laravel.git laravel laraveldb db_user Alpha_Tango1 laravel development 192.168.50.15
+
+    - name: Create cron job to check server's uptime
+      cron:
+        name: Check Uptime
+        minute: 0
+        hour: 0
+        job: /path/to/script/or/command >> /var/log/uptime.log 2>&1
